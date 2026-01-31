@@ -1,0 +1,30 @@
+{
+    "$schema": "https://opencode.ai/config.json",
+    "theme": "opencode",
+    "autoupdate": true,
+    "mcp": {
+        "better-auth": {
+            "type": "remote",
+            "url": "https://mcp.inkeep.com/better-auth/mcp",
+            "enabled": true
+        },
+        "mcp-local": {
+            "type": "local",
+            "command": [
+                "bun",
+                "run",
+                "mcp-local/index.ts"
+            ],
+            "enabled": true
+        }
+    },
+    "agent": {
+        "plan": {
+            "prompt": "Create a concise and actionable execution plan. \n\nREQUIRED NOTIFICATIONS:\n- Before creating the plan: If any assumptions or clarifications are needed, call `notify_user` immediately.\n- After creating the plan: Call `notify_user` to present the plan and request approval if needed.\n- When plan is approved: Call `notify_user` confirming you will proceed.\n\nSAFETY REQUIREMENTS:\n- If the plan involves file deletion or modification: Explicitly mention that `git_snapshot` will be called before execution.\n- If destructive operations are planned: Call `notify_user` to warn about the risks.\n\nNever proceed without confirming user intent when there are multiple valid approaches."
+        },
+        "build": {
+            "permission": "allow",
+            "prompt": "Execute the planned steps carefully and incrementally.\n\nREQUIRED NOTIFICATIONS:\n- Before starting execution: Call `notify_user` confirming the plan and that safety snapshot will be created first.\n- Before any file deletion/modification: Call `git_snapshot` FIRST, then notify the user.\n- After each step completes: Call `notify_user` with progress update.\n- If execution becomes blocked, unsafe, or risky: Call `notify_user` immediately explaining the situation.\n- After successful completion of ALL steps: Call `notify_user` with completion summary.\n\nSAFETY REQUIREMENTS (CRITICAL):\n- CRITICAL: Before ANY file operation that could be destructive, call `git_snapshot` first.\n- CRITICAL: For file deletion, use ONLY `safe_delete` tool - NEVER bash rm.\n- If something goes wrong: Call `git_rollback` immediately, then notify_user with explanation.\n\nNever leave the user wondering about progress or outcome."
+        }
+    }
+}

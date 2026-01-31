@@ -9,13 +9,31 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./pages/__root"
+import { Route as SignupRouteImport } from "./pages/signup"
+import { Route as SigninRouteImport } from "./pages/signin"
 import { Route as SettingsRouteImport } from "./pages/settings"
 import { Route as ProfileRouteImport } from "./pages/profile"
 import { Route as AboutRouteImport } from "./pages/about"
+import { Route as SplatRouteImport } from "./pages/$"
+import { Route as DashboardRouteRouteImport } from "./pages/dashboard/route"
 import { Route as IndexRouteImport } from "./pages/index"
 import { Route as UsersIndexRouteImport } from "./pages/users/index"
+import { Route as DashboardIndexRouteImport } from "./pages/dashboard/index"
 import { Route as UsersIdRouteImport } from "./pages/users/$id"
+import { Route as DashboardUsersRouteImport } from "./pages/dashboard/users"
+import { Route as DashboardSettingsRouteImport } from "./pages/dashboard/settings"
+import { Route as DashboardApikeyRouteImport } from "./pages/dashboard/apikey"
 
+const SignupRoute = SignupRouteImport.update({
+  id: "/signup",
+  path: "/signup",
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SigninRoute = SigninRouteImport.update({
+  id: "/signin",
+  path: "/signin",
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: "/settings",
   path: "/settings",
@@ -31,6 +49,16 @@ const AboutRoute = AboutRouteImport.update({
   path: "/about",
   getParentRoute: () => rootRouteImport,
 } as any)
+const SplatRoute = SplatRouteImport.update({
+  id: "/$",
+  path: "/$",
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRouteRoute = DashboardRouteRouteImport.update({
+  id: "/dashboard",
+  path: "/dashboard",
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: "/",
   path: "/",
@@ -41,69 +69,159 @@ const UsersIndexRoute = UsersIndexRouteImport.update({
   path: "/users/",
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: "/",
+  path: "/",
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const UsersIdRoute = UsersIdRouteImport.update({
   id: "/users/$id",
   path: "/users/$id",
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardUsersRoute = DashboardUsersRouteImport.update({
+  id: "/users",
+  path: "/users",
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
+const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
+  id: "/settings",
+  path: "/settings",
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
+const DashboardApikeyRoute = DashboardApikeyRouteImport.update({
+  id: "/apikey",
+  path: "/apikey",
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute
+  "/dashboard": typeof DashboardRouteRouteWithChildren
+  "/$": typeof SplatRoute
   "/about": typeof AboutRoute
   "/profile": typeof ProfileRoute
   "/settings": typeof SettingsRoute
+  "/signin": typeof SigninRoute
+  "/signup": typeof SignupRoute
+  "/dashboard/apikey": typeof DashboardApikeyRoute
+  "/dashboard/settings": typeof DashboardSettingsRoute
+  "/dashboard/users": typeof DashboardUsersRoute
   "/users/$id": typeof UsersIdRoute
+  "/dashboard/": typeof DashboardIndexRoute
   "/users/": typeof UsersIndexRoute
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute
+  "/$": typeof SplatRoute
   "/about": typeof AboutRoute
   "/profile": typeof ProfileRoute
   "/settings": typeof SettingsRoute
+  "/signin": typeof SigninRoute
+  "/signup": typeof SignupRoute
+  "/dashboard/apikey": typeof DashboardApikeyRoute
+  "/dashboard/settings": typeof DashboardSettingsRoute
+  "/dashboard/users": typeof DashboardUsersRoute
   "/users/$id": typeof UsersIdRoute
+  "/dashboard": typeof DashboardIndexRoute
   "/users": typeof UsersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   "/": typeof IndexRoute
+  "/dashboard": typeof DashboardRouteRouteWithChildren
+  "/$": typeof SplatRoute
   "/about": typeof AboutRoute
   "/profile": typeof ProfileRoute
   "/settings": typeof SettingsRoute
+  "/signin": typeof SigninRoute
+  "/signup": typeof SignupRoute
+  "/dashboard/apikey": typeof DashboardApikeyRoute
+  "/dashboard/settings": typeof DashboardSettingsRoute
+  "/dashboard/users": typeof DashboardUsersRoute
   "/users/$id": typeof UsersIdRoute
+  "/dashboard/": typeof DashboardIndexRoute
   "/users/": typeof UsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | "/"
+    | "/dashboard"
+    | "/$"
     | "/about"
     | "/profile"
     | "/settings"
+    | "/signin"
+    | "/signup"
+    | "/dashboard/apikey"
+    | "/dashboard/settings"
+    | "/dashboard/users"
     | "/users/$id"
+    | "/dashboard/"
     | "/users/"
   fileRoutesByTo: FileRoutesByTo
-  to: "/" | "/about" | "/profile" | "/settings" | "/users/$id" | "/users"
+  to:
+    | "/"
+    | "/$"
+    | "/about"
+    | "/profile"
+    | "/settings"
+    | "/signin"
+    | "/signup"
+    | "/dashboard/apikey"
+    | "/dashboard/settings"
+    | "/dashboard/users"
+    | "/users/$id"
+    | "/dashboard"
+    | "/users"
   id:
     | "__root__"
     | "/"
+    | "/dashboard"
+    | "/$"
     | "/about"
     | "/profile"
     | "/settings"
+    | "/signin"
+    | "/signup"
+    | "/dashboard/apikey"
+    | "/dashboard/settings"
+    | "/dashboard/users"
     | "/users/$id"
+    | "/dashboard/"
     | "/users/"
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
+  SplatRoute: typeof SplatRoute
   AboutRoute: typeof AboutRoute
   ProfileRoute: typeof ProfileRoute
   SettingsRoute: typeof SettingsRoute
+  SigninRoute: typeof SigninRoute
+  SignupRoute: typeof SignupRoute
   UsersIdRoute: typeof UsersIdRoute
   UsersIndexRoute: typeof UsersIndexRoute
 }
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
+    "/signup": {
+      id: "/signup"
+      path: "/signup"
+      fullPath: "/signup"
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/signin": {
+      id: "/signin"
+      path: "/signin"
+      fullPath: "/signin"
+      preLoaderRoute: typeof SigninRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     "/settings": {
       id: "/settings"
       path: "/settings"
@@ -125,6 +243,20 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    "/$": {
+      id: "/$"
+      path: "/$"
+      fullPath: "/$"
+      preLoaderRoute: typeof SplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/dashboard": {
+      id: "/dashboard"
+      path: "/dashboard"
+      fullPath: "/dashboard"
+      preLoaderRoute: typeof DashboardRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     "/": {
       id: "/"
       path: "/"
@@ -139,6 +271,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof UsersIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    "/dashboard/": {
+      id: "/dashboard/"
+      path: "/"
+      fullPath: "/dashboard/"
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     "/users/$id": {
       id: "/users/$id"
       path: "/users/$id"
@@ -146,14 +285,57 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof UsersIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    "/dashboard/users": {
+      id: "/dashboard/users"
+      path: "/users"
+      fullPath: "/dashboard/users"
+      preLoaderRoute: typeof DashboardUsersRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    "/dashboard/settings": {
+      id: "/dashboard/settings"
+      path: "/settings"
+      fullPath: "/dashboard/settings"
+      preLoaderRoute: typeof DashboardSettingsRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    "/dashboard/apikey": {
+      id: "/dashboard/apikey"
+      path: "/apikey"
+      fullPath: "/dashboard/apikey"
+      preLoaderRoute: typeof DashboardApikeyRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
   }
 }
 
+interface DashboardRouteRouteChildren {
+  DashboardApikeyRoute: typeof DashboardApikeyRoute
+  DashboardSettingsRoute: typeof DashboardSettingsRoute
+  DashboardUsersRoute: typeof DashboardUsersRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+}
+
+const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
+  DashboardApikeyRoute: DashboardApikeyRoute,
+  DashboardSettingsRoute: DashboardSettingsRoute,
+  DashboardUsersRoute: DashboardUsersRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
+}
+
+const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
+  DashboardRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DashboardRouteRoute: DashboardRouteRouteWithChildren,
+  SplatRoute: SplatRoute,
   AboutRoute: AboutRoute,
   ProfileRoute: ProfileRoute,
   SettingsRoute: SettingsRoute,
+  SigninRoute: SigninRoute,
+  SignupRoute: SignupRoute,
   UsersIdRoute: UsersIdRoute,
   UsersIndexRoute: UsersIndexRoute,
 }

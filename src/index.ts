@@ -1,39 +1,47 @@
-import { serve } from "bun";
-import index from "./index.html";
-import { join } from "node:path";
-import { scanRoutes, printRoutes } from "./utils/route-scanner";
+import { cors } from "@elysiajs/cors";
+import { swagger } from "@elysiajs/swagger";
+import { Elysia } from "elysia";
+import { apikey } from "./api/apikey";
+import { spaRoutes } from "./generated/spa-routes.generated";
+import html from "./index.html";
+import { apiMiddleware } from "./middleware/apiMiddleware";
+import { auth } from "./utils/auth";
 
-// Scan API routes from src/api
-const apiDir = join(import.meta.dir, "api");
-const apiRoutesRaw = await scanRoutes(apiDir);
+const api = new Elysia({
+	prefix: "/api",
+})
+	.all("/auth/*", ({ request }) => auth.handler(request))
+	.use(cors())
+	.use(
+		swagger({
+			path: "/docs",
+			documentation: {
+				info: {
+					title: "Bun + React API",
+					version: "1.0.0",
+				},
+			},
+		}),
+	)
+	.get("/session", async ({ request }) => {
+		const data = await auth.api.getSession({ headers: request.headers });
+		return { data };
+	})
+	.use(apiMiddleware)
+	.use(apikey);
 
-// Helper to prepend /api to routes scanned from src/api
-// e.g., /users -> /api/users
-const apiRoutes = Object.fromEntries(
-  Object.entries(apiRoutesRaw).map(([path, handler]) => {
-    // If path is root /, map to /api
-    const apiPath = path === "/" ? "/api" : `/api${path}`;
-    return [apiPath, handler];
-  })
-);
+const app = new Elysia().use(api);
 
-if (process.env.NODE_ENV !== "production") {
-  printRoutes(apiRoutes);
+for (const route of spaRoutes) {
+	// exact
+	app.get(route, html);
+	// children
+	app.get(`${route}/*`, html);
 }
 
-const server = serve({
-  routes: {
-    // 1. Register API Routes
-    ...apiRoutes,
-
-    // 2. Serve index.html for all unmatched routes (SPA Fallback)
-    "/*": index,
-  },
-
-  development: process.env.NODE_ENV !== "production" && {
-    hmr: true,
-    console: true,
-  },
+app.listen(3000, ({ hostname, port }) => {
+	console.log(`🚀 Server running at http://${hostname}:${port}`);
+	console.log(`📚 Swagger docs at http://${hostname}:${port}/docs`);
 });
 
-console.log(`🚀 Server running at ${server.url}`);
+export type ApiApp = typeof app;
