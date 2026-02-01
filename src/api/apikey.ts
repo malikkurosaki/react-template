@@ -1,5 +1,6 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <explanation */
 import Elysia, { t } from "elysia";
+import logger from '../utils/logger';
 import { nanoid } from "nanoid";
 import { prisma } from "../utils/db";
 
@@ -11,6 +12,8 @@ export const apikey = new Elysia({
 		async (ctx) => {
 			const { set, user } = ctx as any;
 			try {
+				// logger.info({ userId: user?.id }, 'Fetching API keys');
+
 				if (!user) {
 					set.status = 401;
 					return { error: "Unauthorized" };
@@ -29,8 +32,11 @@ export const apikey = new Elysia({
 					},
 				});
 
+				logger.info({ count: apiKeys.length, userId: user?.id }, 'Fetched API keys');
+
 				return { apiKeys };
-			} catch (_error) {
+			} catch (error) {
+				logger.error({ error }, 'Failed to fetch API keys');
 				set.status = 500;
 				return { error: "Failed to fetch API keys" };
 			}
@@ -78,9 +84,9 @@ export const apikey = new Elysia({
 
 
 				return { apiKey: newApiKey };
-			} catch (_error) {
+			} catch (error) {
 				set.status = 500;
-				console.log(_error);
+				logger.error({ error }, 'Failed to create API key');
 				return { error: "Failed to create API key" };
 			}
 		},
@@ -95,18 +101,18 @@ export const apikey = new Elysia({
 			},
 		},
 	)
-	.patch(
-		"/:id",
+	.post(
+		"/update",
 		async (ctx) => {
-			const { params, body, set, user } = ctx as any;
+			const { body, set, user } = ctx as any;
 			try {
-				const { id } = params;
-				const { isActive, expiresAt } = body;
+				const { id, isActive, expiresAt } = body;
 
-				console.log("Patch API key called with:", { id, isActive, expiresAt, userId: user?.id });
+				logger.info({ id, isActive, expiresAt, userId: user?.id }, 'Patch API key called');
 
 				if (!user) {
 					set.status = 401;
+					logger.error({ id, isActive, expiresAt, userId: user?.id }, 'Unauthorized');
 					return { error: "Unauthorized" };
 				}
 
@@ -115,10 +121,11 @@ export const apikey = new Elysia({
 					where: { id },
 				});
 
-				console.log("Found API key:", apiKey);
+				logger.debug({ apiKey }, 'Found API key');
 
 				if (!apiKey || apiKey.userId !== user.id) {
 					set.status = 403;
+					logger.error({ id, apiKey, userId: user?.id }, 'Forbidden');
 					return { error: "Forbidden" };
 				}
 
@@ -139,20 +146,18 @@ export const apikey = new Elysia({
 					},
 				});
 
-				console.log("Updated API key:", updatedApiKey);
+				logger.info({ apiKeyId: updatedApiKey.id }, 'Updated API key');
 
 				return { apiKey: updatedApiKey };
-			} catch (_error) {
-				console.log("Error updating API key:", _error);
+			} catch (error) {
+				logger.error({ error }, 'Error updating API key');
 				set.status = 500;
 				return { error: "Failed to update API key" };
 			}
 		},
 		{
-			params: t.Object({
-				id: t.String(),
-			}),
 			body: t.Object({
+				id: t.String(),
 				isActive: t.Boolean(),
 				expiresAt: t.Optional(t.Union([t.String(), t.Null()])), // ISO date string or null
 			}),
@@ -162,12 +167,14 @@ export const apikey = new Elysia({
 			},
 		},
 	)
-	.delete(
-		"/:id",
+	.post(
+		"/delete",
 		async (ctx) => {
-			const { params, set, user } = ctx as any;
+			const { body, set, user } = ctx as any;
 			try {
-				const { id } = params;
+				const { id } = body;
+
+				logger.info({ id, userId: user?.id }, 'Deleting API key');
 
 				if (!user) {
 					set.status = 401;
@@ -181,6 +188,7 @@ export const apikey = new Elysia({
 
 				if (!apiKey || apiKey.userId !== user.id) {
 					set.status = 403;
+					logger.warn({ id, userId: user?.id }, 'Attempt to delete API key from another user');
 					return { error: "Forbidden" };
 				}
 
@@ -188,14 +196,17 @@ export const apikey = new Elysia({
 					where: { id },
 				});
 
+				logger.info({ id }, 'Deleted API key');
+
 				return { success: true };
-			} catch (_error) {
+			} catch (error) {
+				logger.error({ error }, 'Failed to delete API key');
 				set.status = 500;
 				return { error: "Failed to delete API key" };
 			}
 		},
 		{
-			params: t.Object({
+			body: t.Object({
 				id: t.String(),
 			}),
 			detail: {

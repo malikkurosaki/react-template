@@ -84,7 +84,7 @@ function DashboardApikeyComponent() {
 			setCreating(true);
 			const response = await apiClient.api.apikey.post({
 				name: newKeyName,
-				expiresAt: dayjs(newKeyExpiresAt).toISOString() ,
+				expiresAt: dayjs(newKeyExpiresAt).toISOString(),
 			});
 
 			if (response.data) {
@@ -103,7 +103,12 @@ function DashboardApikeyComponent() {
 
 	const handleToggleApiKey = async (id: string, currentStatus: boolean) => {
 		try {
-			const response = await apiClient.api.apikey[":id"].patch({
+			if (!id) {
+				setError("API key ID is required");
+				return;
+			}
+			const response = await apiClient.api.apikey.update.post({
+				id,
 				isActive: !currentStatus,
 			});
 
@@ -122,8 +127,10 @@ function DashboardApikeyComponent() {
 
 	const handleDeleteApiKey = async (id: string) => {
 		try {
-			await apiClient.api.apikey[":id"].delete();
-			setApiKeys(apiKeys.filter((key) => key.id !== id));
+			await apiClient.api.apikey.delete.post({
+				id,
+			});
+			setApiKeys(apiKeys.filter((key: ApiKey) => key.id !== id));
 		} catch (err) {
 			setError("Failed to delete API key");
 			console.error(err);

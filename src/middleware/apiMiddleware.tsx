@@ -1,4 +1,5 @@
 import type Elysia from "elysia";
+import logger from '@/utils/logger';
 import { auth } from "@/utils/auth";
 import { prisma } from "@/utils/db";
 
@@ -71,13 +72,13 @@ export function apiMiddleware(app: Elysia) {
 					},
 				};
 			} catch (err) {
-				console.warn(`[AUTH] Error verifying API key: ${err}`);
+				logger.warn({ err }, '[AUTH] Error verifying API key');
 				return { user: null };
 			}
 		})
 		.onBeforeHandle(({ user, set, request }) => {
 			if (!user) {
-				console.warn(`[AUTH] Unauthorized: ${request.method} ${request.url}`);
+				logger.warn(`[AUTH] Unauthorized: ${request.method} ${request.url}`);
 				set.status = 401;
 				return { message: "Unauthorized" };
 			}

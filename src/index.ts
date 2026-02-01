@@ -1,6 +1,7 @@
 import { cors } from "@elysiajs/cors";
 import { swagger } from "@elysiajs/swagger";
 import { Elysia } from "elysia";
+import logger from './utils/logger';
 import { apikey } from "./api/apikey";
 import { spaRoutes } from "./generated/spa-routes.generated";
 import html from "./index.html";
@@ -40,8 +41,8 @@ for (const route of spaRoutes) {
 }
 
 app.listen(3000, ({ hostname, port }) => {
-	console.log(`🚀 Server running at http://${hostname}:${port}`);
-	console.log(`📚 Swagger docs at http://${hostname}:${port}/docs`);
+	logger.info(`🚀 Server running at http://${hostname}:${port}`);
+	// logger.info(`📚 Swagger docs at http://${hostname}:${port}/docs`);
 });
 
 export type ApiApp = typeof app;

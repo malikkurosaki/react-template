@@ -1,13 +1,17 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
+import logger from './logger';
 import { PrismaClient } from "../../generated/prisma";
 
 const baseUrl = process.env.BUN_PUBLIC_BASE_URL;
 const prisma = new PrismaClient();
 
 if (!baseUrl) {
+	logger.error("BUN_PUBLIC_BASE_URL is not defined");
 	throw new Error("BUN_PUBLIC_BASE_URL is not defined");
 }
+
+// logger.info('Initializing Better Auth with Prisma adapter');
 export const auth = betterAuth({
 	baseURL: baseUrl,
 	basePath: "/api/auth",

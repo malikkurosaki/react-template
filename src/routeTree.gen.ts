@@ -14,7 +14,6 @@ import { Route as SigninRouteImport } from "./pages/signin"
 import { Route as SettingsRouteImport } from "./pages/settings"
 import { Route as ProfileRouteImport } from "./pages/profile"
 import { Route as AboutRouteImport } from "./pages/about"
-import { Route as SplatRouteImport } from "./pages/$"
 import { Route as DashboardRouteRouteImport } from "./pages/dashboard/route"
 import { Route as IndexRouteImport } from "./pages/index"
 import { Route as UsersIndexRouteImport } from "./pages/users/index"
@@ -47,11 +46,6 @@ const ProfileRoute = ProfileRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: "/about",
   path: "/about",
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SplatRoute = SplatRouteImport.update({
-  id: "/$",
-  path: "/$",
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRouteRoute = DashboardRouteRouteImport.update({
@@ -98,7 +92,6 @@ const DashboardApikeyRoute = DashboardApikeyRouteImport.update({
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute
   "/dashboard": typeof DashboardRouteRouteWithChildren
-  "/$": typeof SplatRoute
   "/about": typeof AboutRoute
   "/profile": typeof ProfileRoute
   "/settings": typeof SettingsRoute
@@ -113,7 +106,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute
-  "/$": typeof SplatRoute
   "/about": typeof AboutRoute
   "/profile": typeof ProfileRoute
   "/settings": typeof SettingsRoute
@@ -130,7 +122,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   "/": typeof IndexRoute
   "/dashboard": typeof DashboardRouteRouteWithChildren
-  "/$": typeof SplatRoute
   "/about": typeof AboutRoute
   "/profile": typeof ProfileRoute
   "/settings": typeof SettingsRoute
@@ -148,7 +139,6 @@ export interface FileRouteTypes {
   fullPaths:
     | "/"
     | "/dashboard"
-    | "/$"
     | "/about"
     | "/profile"
     | "/settings"
@@ -163,7 +153,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | "/"
-    | "/$"
     | "/about"
     | "/profile"
     | "/settings"
@@ -179,7 +168,6 @@ export interface FileRouteTypes {
     | "__root__"
     | "/"
     | "/dashboard"
-    | "/$"
     | "/about"
     | "/profile"
     | "/settings"
@@ -196,7 +184,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
-  SplatRoute: typeof SplatRoute
   AboutRoute: typeof AboutRoute
   ProfileRoute: typeof ProfileRoute
   SettingsRoute: typeof SettingsRoute
@@ -241,13 +228,6 @@ declare module "@tanstack/react-router" {
       path: "/about"
       fullPath: "/about"
       preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    "/$": {
-      id: "/$"
-      path: "/$"
-      fullPath: "/$"
-      preLoaderRoute: typeof SplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     "/dashboard": {
@@ -330,7 +310,6 @@ const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRouteRoute: DashboardRouteRouteWithChildren,
-  SplatRoute: SplatRoute,
   AboutRoute: AboutRoute,
   ProfileRoute: ProfileRoute,
   SettingsRoute: SettingsRoute,
