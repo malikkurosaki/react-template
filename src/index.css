@@ -185,3 +185,12 @@ code {
 		animation: none !important;
 	}
 }
+
+.nav-item {
+	transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+	background-color: var(--mantine-color-gray-1);
+	color: var(--mantine-color-blue-6) !important;
+}

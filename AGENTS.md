@@ -4,12 +4,14 @@
 
 ```bash
 # Development
-bun dev              # Start dev server with HMR
+bun dev              # Start Vite (3000) + Bun backend (3001) with HMR
+bun run dev:backend  # Start Bun backend only (port 3001)
+bun run dev:frontend # Start Vite frontend only (port 3000)
 bun run watch:routes # Watch and regenerate routes
 
 # Production
 bun build            # Build for production (outputs to dist/)
-bun start            # Start production server
+bun start            # Start production server (port 3000)
 
 # Code Quality
 bun run check        # Biome check --write (lint + format + fix)
@@ -94,6 +96,7 @@ src/
 - **State:** Valtio (proxy-based)
 - **DB:** Prisma with PostgreSQL
 - **Build:** Bun (bundler + runtime)
+- **DevTools:** react-dev-inspector (Shift+A to inspect components)
 
 ### Environment Variables
 - Prefix public vars with `BUN_PUBLIC_*`

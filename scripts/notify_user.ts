@@ -65,7 +65,7 @@ try {
   }
 
   const data = await res.json();
-  console.log("Notifikasi berhasil dikirim:", data);
+  console.log( data);
 } catch (error: any) {
   console.error("Error saat mengirim notifikasi:", error.message);
   process.exit(1);

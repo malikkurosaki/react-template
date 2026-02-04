@@ -2,7 +2,7 @@
 import { protectedRouteMiddleware } from "@/middleware/authMiddleware";
 import { authStore } from "@/store/auth";
 import "@mantine/core/styles.css";
-import '@mantine/dates/styles.css';
+import "@mantine/dates/styles.css";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createRootRoute({

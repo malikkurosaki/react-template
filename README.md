@@ -6,9 +6,12 @@ A modern Bun + React template with file-based routing.
 
 - ⚡ **Bun Runtime** - Fast JavaScript runtime and bundler
 - ⚛️ **React 19** - Latest React with TypeScript
-- 🛣️ **File-Based Routing** - Automatic API route discovery from `src/routes`
-- 🔥 **Hot Module Reloading** - Instant feedback during development
-- 🎨 **Modern UI** - Animated interface with API testing component
+- 🛣️ **File-Based Routing** - TanStack Router with automatic route generation
+- 🔥 **Hot Module Reloading** - Instant feedback during development via Vite
+- 🎨 **Modern UI** - Mantine v8 component library
+- 🔍 **Dev Inspector** - Click components to open in editor (Shift+A to toggle)
+- 🗄️ **Database** - Prisma with PostgreSQL
+- 🔐 **Authentication** - Better Auth with session management
 
 ## Quick Start
 
@@ -24,10 +27,22 @@ To start a development server:
 bun dev
 ```
 
-To run for production:
+This starts:
+- Frontend dev server (Vite) on `http://localhost:3000`
+- Backend API server (Bun) on `http://localhost:3001`
+
+**Access your app at: `http://localhost:3000`**
+
+### Dev Inspector (Shift+A)
+Press **Shift + A** to toggle component inspector. Click any component to open it in your editor!
+
+See `docs/INSPECTOR_SETUP.md` for details.
+
+To build and run for production:
 
 ```bash
-bun start
+bun run build  # Build frontend with Vite
+bun start      # Start production server
 ```
 
 ## File-Based Routing

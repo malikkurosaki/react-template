@@ -1,7 +1,7 @@
 import type Elysia from "elysia";
-import logger from '@/utils/logger';
 import { auth } from "@/utils/auth";
 import { prisma } from "@/utils/db";
+import logger from "@/utils/logger";
 
 export function apiMiddleware(app: Elysia) {
 	return app
@@ -60,6 +60,15 @@ export function apiMiddleware(app: Elysia) {
 					return { user: null };
 				}
 
+				// Check if API key has expired
+				if (
+					apiKeyRecord.expiresAt &&
+					new Date(apiKeyRecord.expiresAt) < new Date()
+				) {
+					logger.info({ keyId: apiKeyRecord.id }, "[AUTH] API key expired");
+					return { user: null };
+				}
+
 				// Return the associated user data
 				return {
 					user: {
@@ -72,7 +81,7 @@ export function apiMiddleware(app: Elysia) {
 					},
 				};
 			} catch (err) {
-				logger.warn({ err }, '[AUTH] Error verifying API key');
+				logger.warn({ err }, "[AUTH] Error verifying API key");
 				return { user: null };
 			}
 		})

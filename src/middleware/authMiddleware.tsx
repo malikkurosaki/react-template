@@ -21,7 +21,9 @@ type SessionResponse = {
 
 async function fetchSession(): Promise<SessionResponse | null> {
 	try {
-		const res = await fetch(`${process.env.BUN_PUBLIC_BASE_URL}/api/session`, {
+		const baseURL =
+			import.meta.env.BUN_PUBLIC_BASE_URL || window.location.origin;
+		const res = await fetch(`${baseURL}/api/session`, {
 			method: "GET",
 			credentials: "include",
 		});

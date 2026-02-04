@@ -1,9 +1,10 @@
 import { edenTreaty } from "@elysiajs/eden";
 import type { ApiApp } from "../index";
 
-const baseUrl = process.env.BUN_PUBLIC_BASE_URL;
+const baseUrl =
+	import.meta.env.BUN_PUBLIC_BASE_URL ||
+	(typeof window !== "undefined"
+		? window.location.origin
+		: "http://localhost:3000");
 
-if (!baseUrl) {
-	throw new Error("BUN_PUBLIC_BASE_URL is not defined");
-}
 export const apiClient = edenTreaty<ApiApp>(baseUrl);

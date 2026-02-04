@@ -1,8 +1,8 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <explanation */
 import Elysia, { t } from "elysia";
-import logger from '../utils/logger';
 import { nanoid } from "nanoid";
 import { prisma } from "../utils/db";
+import logger from "../utils/logger";
 
 export const apikey = new Elysia({
 	prefix: "/apikey",
@@ -32,11 +32,14 @@ export const apikey = new Elysia({
 					},
 				});
 
-				logger.info({ count: apiKeys.length, userId: user?.id }, 'Fetched API keys');
+				logger.info(
+					{ count: apiKeys.length, userId: user?.id },
+					"Fetched API keys",
+				);
 
 				return { apiKeys };
 			} catch (error) {
-				logger.error({ error }, 'Failed to fetch API keys');
+				logger.error({ error }, "Failed to fetch API keys");
 				set.status = 500;
 				return { error: "Failed to fetch API keys" };
 			}
@@ -82,11 +85,10 @@ export const apikey = new Elysia({
 					},
 				});
 
-
 				return { apiKey: newApiKey };
 			} catch (error) {
 				set.status = 500;
-				logger.error({ error }, 'Failed to create API key');
+				logger.error({ error }, "Failed to create API key");
 				return { error: "Failed to create API key" };
 			}
 		},
@@ -108,11 +110,17 @@ export const apikey = new Elysia({
 			try {
 				const { id, isActive, expiresAt } = body;
 
-				logger.info({ id, isActive, expiresAt, userId: user?.id }, 'Patch API key called');
+				logger.info(
+					{ id, isActive, expiresAt, userId: user?.id },
+					"Patch API key called",
+				);
 
 				if (!user) {
 					set.status = 401;
-					logger.error({ id, isActive, expiresAt, userId: user?.id }, 'Unauthorized');
+					logger.error(
+						{ id, isActive, expiresAt, userId: user?.id },
+						"Unauthorized",
+					);
 					return { error: "Unauthorized" };
 				}
 
@@ -121,11 +129,11 @@ export const apikey = new Elysia({
 					where: { id },
 				});
 
-				logger.debug({ apiKey }, 'Found API key');
+				logger.debug({ apiKey }, "Found API key");
 
 				if (!apiKey || apiKey.userId !== user.id) {
 					set.status = 403;
-					logger.error({ id, apiKey, userId: user?.id }, 'Forbidden');
+					logger.error({ id, apiKey, userId: user?.id }, "Forbidden");
 					return { error: "Forbidden" };
 				}
 
@@ -133,7 +141,12 @@ export const apikey = new Elysia({
 					where: { id },
 					data: {
 						isActive,
-						expiresAt: expiresAt !== undefined ? (expiresAt ? new Date(expiresAt) : null) : undefined
+						expiresAt:
+							expiresAt !== undefined
+								? expiresAt
+									? new Date(expiresAt)
+									: null
+								: undefined,
 					},
 					select: {
 						id: true,
@@ -146,11 +159,11 @@ export const apikey = new Elysia({
 					},
 				});
 
-				logger.info({ apiKeyId: updatedApiKey.id }, 'Updated API key');
+				logger.info({ apiKeyId: updatedApiKey.id }, "Updated API key");
 
 				return { apiKey: updatedApiKey };
 			} catch (error) {
-				logger.error({ error }, 'Error updating API key');
+				logger.error({ error }, "Error updating API key");
 				set.status = 500;
 				return { error: "Failed to update API key" };
 			}
@@ -174,7 +187,7 @@ export const apikey = new Elysia({
 			try {
 				const { id } = body;
 
-				logger.info({ id, userId: user?.id }, 'Deleting API key');
+				logger.info({ id, userId: user?.id }, "Deleting API key");
 
 				if (!user) {
 					set.status = 401;
@@ -188,7 +201,10 @@ export const apikey = new Elysia({
 
 				if (!apiKey || apiKey.userId !== user.id) {
 					set.status = 403;
-					logger.warn({ id, userId: user?.id }, 'Attempt to delete API key from another user');
+					logger.warn(
+						{ id, userId: user?.id },
+						"Attempt to delete API key from another user",
+					);
 					return { error: "Forbidden" };
 				}
 
@@ -196,11 +212,11 @@ export const apikey = new Elysia({
 					where: { id },
 				});
 
-				logger.info({ id }, 'Deleted API key');
+				logger.info({ id }, "Deleted API key");
 
 				return { success: true };
 			} catch (error) {
-				logger.error({ error }, 'Failed to delete API key');
+				logger.error({ error }, "Failed to delete API key");
 				set.status = 500;
 				return { error: "Failed to delete API key" };
 			}

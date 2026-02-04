@@ -1,9 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
-
-export const Route = createFileRoute("/dashboard")({
-	component: DashboardLayout,
-});
-
 import {
 	ActionIcon,
 	AppShell,
@@ -13,16 +7,25 @@ import {
 	rem,
 	ScrollArea,
 	Text,
-	Title,
+	Title
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
 	IconHome,
 	IconKey,
 	IconSettings,
-	IconUsers,
+	IconUsers
 } from "@tabler/icons-react";
-import { Outlet, useLocation, useNavigate } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	Outlet,
+	useLocation,
+	useNavigate,
+} from "@tanstack/react-router";
+
+export const Route = createFileRoute("/dashboard")({
+	component: DashboardLayout,
+});
 
 function DashboardLayout() {
 	const location = useLocation();

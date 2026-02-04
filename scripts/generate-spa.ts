@@ -50,12 +50,26 @@ export async function generateSpa() {
 
 	const sorted = [...routes].sort();
 
-	const content = `
+	// Check if file exists and read current content
+	let currentContent = "";
+	try {
+		currentContent = await fs.readFile(OUTPUT, "utf8");
+	} catch (error) {
+		// File doesn't exist, we'll create it
+		currentContent = "";
+	}
+
+	const newContent = `
 // ⚠️ AUTO-GENERATED — DO NOT EDIT
 export const spaRoutes = ${JSON.stringify(sorted, null, 2)} as const
 `;
 
-	await Bun.write(OUTPUT, content);
-	console.log("✅ SPA routes generated:", sorted);
+	// Only write if content has changed
+	if (currentContent !== newContent) {
+		await Bun.write(OUTPUT, newContent);
+		console.info(sorted, "✅ SPA routes generated:");
+	} else {
+		console.info("✅ No changes to SPA routes, file not modified");
+	}
 }
 

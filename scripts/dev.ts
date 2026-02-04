@@ -3,6 +3,8 @@ import { watch } from "fs";
 import { join } from "path";
 import { generateSpa } from "./generate-spa";
 
+// Set NODE_ENV to development
+process.env.NODE_ENV = "development";
 
 // Configuration
 const PAGES_DIR = join(process.cwd(), "src", "pages");
@@ -15,6 +17,7 @@ console.log("🌐 Starting Bun Server...");
 const server = spawn("bun", ["--hot", "src/index.ts"], {
 	stdio: "inherit",
 	shell: true,
+	env: { ...process.env, NODE_ENV: "development" },
 });
 
 // 2. Setup Watcher & Generator

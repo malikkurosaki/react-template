@@ -6,22 +6,31 @@
  */
 /** biome-ignore-all lint/suspicious/noAssignInExpressions: <explanation */
 
+import { MantineProvider } from "@mantine/core";
+import "@mantine/core/styles.css";
 import { RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
+import { Inspector } from "react-dev-inspector";
 import { createRoot } from "react-dom/client";
 import { router } from "./router";
-import "@mantine/core/styles.css";
-import { MantineProvider } from "@mantine/core";
 
 const elem = document.getElementById("root");
 if (!elem) {
 	throw new Error("Root element not found");
 }
+
+// Wrapper component for conditional Inspector
+const InspectorWrapper = import.meta.env.DEV
+	? Inspector
+	: ({ children }: { children: React.ReactNode }) => <>{children}</>;
+
 const app = (
 	<StrictMode>
-		<MantineProvider defaultColorScheme="dark">
-			<RouterProvider router={router} />
-		</MantineProvider>
+		<InspectorWrapper keys={["shift", "a"]}>
+			<MantineProvider defaultColorScheme="dark">
+				<RouterProvider router={router} />
+			</MantineProvider>
+		</InspectorWrapper>
 	</StrictMode>
 );
 

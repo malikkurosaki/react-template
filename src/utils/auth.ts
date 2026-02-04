@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import logger from './logger';
 import { PrismaClient } from "../../generated/prisma";
+import logger from "./logger";
 
 const baseUrl = process.env.BUN_PUBLIC_BASE_URL;
 const prisma = new PrismaClient();

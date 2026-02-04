@@ -4,21 +4,24 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev": "bun scripts/dev.ts",
-		"build": "bun build ./src/index.html --outdir=dist --sourcemap --target=browser --minify --define:process.env.NODE_ENV='\"production\"' --env='BUN_PUBLIC_*'",
+		"dev": "concurrently \"bun run dev:backend\" \"bun run dev:frontend\"",
+		"dev:backend": "NODE_ENV=development bun --hot src/index.ts",
+		"dev:frontend": "vite",
+		"build": "vite build",
 		"start": "NODE_ENV=production bun src/index.ts",
+		"preview": "bun run build && bun start",
 		"generate": "bun x @tanstack/router-cli generate",
 		"watch:routes": "bun x @tanstack/router-cli generate --watch",
 		"check": "biome check --write .",
 		"format": "biome format --write .",
 		"lint": "biome lint .",
-		"mcp": "bun mcp-local/index.ts",
 		"seed": "bun run prisma/seed.ts"
 	},
 	"dependencies": {
 		"@better-auth/cli": "^1.4.18",
 		"@elysiajs/cors": "^1.4.1",
 		"@elysiajs/eden": "^1.4.6",
+		"@elysiajs/static": "^1.4.7",
 		"@elysiajs/swagger": "^1.3.1",
 		"@mantine/core": "^8.3.13",
 		"@mantine/dates": "^8.3.13",
@@ -42,14 +45,21 @@
 		"valtio": "^2.3.0"
 	},
 	"devDependencies": {
+		"@babel/core": "^7.29.0",
+		"@babel/plugin-transform-react-jsx-source": "^7.27.1",
 		"@biomejs/biome": "^2.3.13",
+		"@react-dev-inspector/vite-plugin": "^2.0.1",
 		"@tanstack/react-router-devtools": "^1.157.16",
 		"@tanstack/router-cli": "^1.157.16",
 		"@tanstack/router-plugin": "^1.157.16",
 		"@types/bun": "latest",
 		"@types/react": "^19",
 		"@types/react-dom": "^19",
+		"@vitejs/plugin-react": "^5.1.3",
+		"concurrently": "^9.2.1",
 		"fast-glob": "^3.3.3",
-		"prisma": "^6.19.2"
+		"prisma": "^6.19.2",
+		"react-dev-inspector": "^2.0.1",
+		"vite": "^7.3.1"
 	}
 }
